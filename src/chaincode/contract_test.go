@@ -23,29 +23,29 @@ import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
-func TestPingChaincode_ping(t *testing.T) {
-	scc := new(PingChaincode)
-	stub := shim.NewMockStub("PingChaincode", scc)
+func TestContractChaincode_health(t *testing.T) {
+	scc := new(ContractChaincode)
+	stub := shim.NewMockStub("ContractChaincode", scc)
 
-	// Ping
-	checkPing(t, stub, "A", "345")
+	// Contract
+	checkHealth(t, stub, "A", "345")
 
 }
 
-func checkPing(t *testing.T, stub *shim.MockStub, name string, value string) {
-	res := stub.MockInvoke("1", [][]byte{[]byte("Ping")})
+func checkHealth(t *testing.T, stub *shim.MockStub, name string, value string) {
+	res := stub.MockInvoke("1", [][]byte{[]byte("Health")})
 	if res.Status != shim.OK {
-		fmt.Println("ping", name, "failed", string(res.Message))
+		fmt.Println("health", name, "failed", string(res.Message))
 		t.FailNow()
 	}
 	if res.Payload == nil {
-		fmt.Println("ping", name, "failed to return value")
+		fmt.Println("health", name, "failed to return value")
 		t.FailNow()
 	}
 
 	result := string(res.Payload)
 	if string(res.Payload) != "Ok" {
-		fmt.Println("Ping return value not expected.  Value expected is Ok but got ", result)
+		fmt.Println("Contract return value not expected.  Value expected is Ok but got ", result)
 		t.FailNow()
 	}
 }
